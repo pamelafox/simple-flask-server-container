@@ -39,16 +39,27 @@ module keyVault './core/security/keyvault.bicep' = {
   }
 }
 
-// Container apps host (including container registry)
-module containerApps 'core/host/container-apps.bicep' = {
+// Container registry
+module containerRegistry 'core/host/container-registry.bicep' = {
   name: 'container-apps'
   scope: resourceGroup
   params: {
-    name: 'app'
+    name: '${replace(prefix, '-', '')}registry'
     location: location
-    containerAppsEnvironmentName: '${prefix}-containerapps-env'
-    containerRegistryName: '${replace(prefix, '-', '')}registry'
-    logAnalyticsWorkspaceName: logAnalyticsWorkspace.outputs.name
+  }
+}
+
+module appServicePlan 'core/host/appserviceplan.bicep' = {
+  name: 'serviceplan'
+  scope: resourceGroup
+  params: {
+    name: '${prefix}-serviceplan'
+    location: location
+    tags: tags
+    sku: {
+      name: 'B1'
+    }
+    reserved: true
   }
 }
 
@@ -60,8 +71,8 @@ module web 'web.bicep' = {
     name: '${take(prefix,19)}-containerapp'
     location: location
     imageName: webImageName
-    containerAppsEnvironmentName: containerApps.outputs.environmentName
-    containerRegistryName: containerApps.outputs.registryName
+    appServicePlanId: appServicePlan.outputs.id
+    containerRegistryName: containerRegistry.name
     keyVaultName: keyVault.outputs.name
   }
 }

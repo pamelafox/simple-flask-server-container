@@ -2,21 +2,21 @@ param name string
 param location string = resourceGroup().location
 param tags object = {}
 
-param containerAppsEnvironmentName string
+param appServicePlanId string
 param containerRegistryName string
 param imageName string = ''
 param keyVaultName string
 param serviceName string = 'web'
 
-module app 'core/host/container-app.bicep' = {
-  name: '${serviceName}-container-app-module'
+module app 'core/host/appservice.bicep' = {
+  name: '${serviceName}-appservice'
   params: {
     name: name
     location: location
     tags: union(tags, { 'azd-service-name': serviceName })
-    containerAppsEnvironmentName: containerAppsEnvironmentName
-    containerRegistryName: containerRegistryName
-    imageName: !empty(imageName) ? imageName : 'nginx:latest'
+    appServicePlanId: appServicePlanId
+    runtimeName: 'docker'
+    runtimeVersion: imageName
     keyVaultName: keyVault.name
     targetPort: 5000
   }
