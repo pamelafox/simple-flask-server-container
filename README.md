@@ -1,8 +1,10 @@
-This repository includes a very simple Python Flask web site, made for demonstration purposes only.
+This repository includes a simple Python Flask web site, made for demonstration purposes only.
+The project can be developed locally with Docker and can be deployed to Azure Container Apps
+using the infrastructure files in `infra`. See below for more details.
 
 ### Local development
 
-This project has devcontainer support, so you can open it in Github Codespaces or local VS Code with the Dev Containers extension. 
+This project has Dev Container support, so you can open it in Github Codespaces or local VS Code with the Dev Containers extension. 
 
 Steps for running the server: 
 
@@ -11,17 +13,18 @@ Steps for running the server:
 2. Install the requirements:
 
 ```shell
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 3. Run the local server: (or use VS Code "Run" button and select "Run server")
 
 ```shell
-flask run
+python3 -m flask --debug run
 ```
 
-3. Click 'http://127.0.0.1:5000' in the terminal, which should open the website in a new tab
-4. Try the index page, try '/hello?name=yourname', and try other paths.
+3. Click 'http://127.0.0.1:5000' in the terminal, which should open the website in a new tab.
+
+4. Try the index page, try '/hello?name=yourname', and try a non-existent path (to see 404 error).
 
 
 ### Local development with Docker
@@ -65,7 +68,23 @@ It will prompt you to login and to provide a name (like "flask-app") and locatio
 azd deploy
 ```
 
+### Costs
+
+Pricing varies per region and usage, so it isn't possible to predict exact costs for your usage.
+The majority of the Azure resources used in this infrastructure are on usage-based pricing tiers. 
+However, Azure Container Registry has a fixed cost per registry per day.
+
+You can try the [Azure pricing calculator](https://azure.com/e/a0b45ff4228d46baa8ca1dbd15d62afa) for the resources:
+
+- Azure Container App: Consumption tier with 0.5 CPU, 1GiB memory/storage. Pricing is based on resource allocation, and each month allows for a certain amount of free usage. [Pricing](https://azure.microsoft.com/pricing/details/container-apps/)
+- Azure Container Registry: Basic tier. [Pricing](https://azure.microsoft.com/pricing/details/container-registry/)
+- Key Vault: Standard tier. Costs are per transaction, a few transactions are used on each deploy. [Pricing](https://azure.microsoft.com/pricing/details/key-vault/)
+- Log analytics: Pay-as-you-go tier. Costs based on data ingested. [Pricing](https://azure.microsoft.com/pricing/details/monitor/)
+
+⚠️ To avoid unnecessary costs, remember to take down your app if it's no longer in use, 
+either by deleting the resource group in the Portal or running `azd down`.
+
 
 ## Getting help
 
-If you're working with this project and running into issues, please post in [Discussions](/discussions). 
+If you're working with this project and running into issues, please post in **Discussions**.
