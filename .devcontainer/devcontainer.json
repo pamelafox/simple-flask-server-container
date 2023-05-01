@@ -12,7 +12,10 @@
 
 	// See https://containers.dev/implementors/features/
 	"features": {
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/devcontainers/features/azure-cli:1": {
+			"extensions": "containerapp"
+		}
     },
 
 	// Configure tool-specific properties.
