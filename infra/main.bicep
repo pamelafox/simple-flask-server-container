@@ -9,11 +9,7 @@ param name string
 @description('Primary location for all resources')
 param location string
 
-@description('The image name for the web service')
-param webImageName string = ''
-
-@description('Id of the user or app to assign application roles')
-param principalId string = ''
+param webAppExists bool = false
 
 var resourceToken = toLower(uniqueString(subscription().id, name, location))
 var tags = { 'azd-env-name': name }
@@ -27,18 +23,6 @@ resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
 var prefix = '${name}-${resourceToken}'
 
 
-// Store secrets in a keyvault
-module keyVault './core/security/keyvault.bicep' = {
-  name: 'keyvault'
-  scope: resourceGroup
-  params: {
-    name: '${take(prefix, 17)}-vault'
-    location: location
-    tags: tags
-    principalId: principalId
-  }
-}
-
 // Container apps host (including container registry)
 module containerApps 'core/host/container-apps.bicep' = {
   name: 'container-apps'
@@ -46,6 +30,7 @@ module containerApps 'core/host/container-apps.bicep' = {
   params: {
     name: 'app'
     location: location
+    tags: tags
     containerAppsEnvironmentName: '${prefix}-containerapps-env'
     containerRegistryName: '${replace(prefix, '-', '')}registry'
     logAnalyticsWorkspaceName: logAnalyticsWorkspace.outputs.name
@@ -57,12 +42,13 @@ module web 'web.bicep' = {
   name: 'web'
   scope: resourceGroup
   params: {
-    name: '${take(prefix,19)}-containerapp'
+    name: replace('${take(prefix,19)}-ca', '--', '-')
     location: location
-    imageName: webImageName
+    tags: tags
+    identityName: '${prefix}-id-web'
     containerAppsEnvironmentName: containerApps.outputs.environmentName
     containerRegistryName: containerApps.outputs.registryName
-    keyVaultName: keyVault.outputs.name
+    exists: webAppExists
   }
 }
 
@@ -85,4 +71,3 @@ output SERVICE_WEB_IDENTITY_PRINCIPAL_ID string = web.outputs.SERVICE_WEB_IDENTI
 output SERVICE_WEB_NAME string = web.outputs.SERVICE_WEB_NAME
 output SERVICE_WEB_URI string = web.outputs.SERVICE_WEB_URI
 output SERVICE_WEB_IMAGE_NAME string = web.outputs.SERVICE_WEB_IMAGE_NAME
-output AZURE_KEY_VAULT_NAME string = keyVault.outputs.name

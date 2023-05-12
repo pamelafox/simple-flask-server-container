@@ -5,6 +5,5 @@ name: simple-flask-container-app
 services:
   web:
     project: .
-    module: web
     language: py
     host: containerapp
