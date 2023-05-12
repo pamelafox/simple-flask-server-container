@@ -1,17 +1,8 @@
-.nav-scroller {
-    position: relative;
-    z-index: 2;
-    height: 2.75rem;
-    overflow-y: hidden;
+body {
+    background-color: #e8e8e8;
+    font-family: Arial, sans-serif;
 }
 
-.nav-scroller .nav {
-    display: flex;
-    flex-wrap: nowrap;
-    padding-bottom: 1rem;
-    margin-top: -1px;
-    overflow-x: auto;
-    text-align: center;
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
+h1, h2, h3 {
+    color: rgb(41, 138, 212);
 }
