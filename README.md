@@ -19,10 +19,10 @@ python3 -m pip install -r requirements.txt
 3. Run the local server: (or use VS Code "Run" button and select "Run server")
 
 ```shell
-python3 -m flask --debug run
+python3 -m flask --debug run --port 50505
 ```
 
-3. Click 'http://127.0.0.1:5000' in the terminal, which should open the website in a new tab.
+3. Click 'http://127.0.0.1:50505' in the terminal, which should open the website in a new tab.
 
 4. Try the index page, try '/hello?name=yourname', and try a non-existent path (to see 404 error).
 
@@ -41,7 +41,7 @@ docker build --tag flask-app .
 2. Run the image:
 
 ```
-docker run --publish 5000:5000 flask-app
+docker run --publish 50505:50505 flask-app
 ```
 
 ### Deployment
