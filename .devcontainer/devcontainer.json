@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json.
 {
-	"name": "simple-flask-server-example",
-	"image": "mcr.microsoft.com/devcontainers/python:3.11-bullseye",
+	"name": "simple-flask-server-container",
+	"image": "mcr.microsoft.com/devcontainers/python:3.12-bullseye",
 
 	// See https://containers.dev/implementors/features/
 	"features": {
@@ -22,12 +22,7 @@
 			],
 			// Set *default* container specific settings.json values on container create.
 			"settings": { 
-				"python.defaultInterpreterPath": "/usr/local/bin/python",
-				"python.linting.enabled": true,
-				"python.linting.pylintEnabled": true,
-				"python.linting.pylintArgs": [
-					"--disable=C0114,C0115,C0116"
-				]
+				"python.defaultInterpreterPath": "/usr/local/bin/python"
 			}
 		}
 	},
